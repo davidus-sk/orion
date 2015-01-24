@@ -16,7 +16,7 @@ use DateTime::Event::Sunrise;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Orion::Helper;
+use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command);;
 
 # global variables
 my $imaging_flag_file = "/var/run/orion.imaging";
