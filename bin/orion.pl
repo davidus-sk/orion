@@ -30,7 +30,7 @@ my $longitude = -81.4622782;
 my $latitude = 30.2416795;
 my $altitude = -15;
 
-my $destination, $command;
+my ($destination, $command);
 
 # hello
 
