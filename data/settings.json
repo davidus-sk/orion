@@ -1,4 +1,7 @@
 {
+	"user": {
+		"email":"me@raspberry.pi"
+	},
 	"storage": {
 		"temp":"/var/www/temp",
 		"final":"/var/www"
