@@ -71,7 +71,7 @@ while (1) {
 	$timeout = $duration_minutes * 60 * 1000;
 	$timelapse = exists $settings{camera}{timelapse} ? $settings{camera}{timelapse} * 1 : $timelapse;
 	$iso = exists $settings{camera}{iso} ? $settings{camera}{iso} * 1 : $iso;
-	$exposure = exists $settings{camera}{exposure} ? $settings{camera}{exposure} * 1 :  $exposure;
+	$exposure = exists $settings{camera}{exposure} ? $settings{camera}{exposure} : $exposure;
 	$shutter_speed = exists $settings{camera}{shutter_speed} ? $settings{camera}{shutter_speed} * 1 : $shutter_speed;
 	$quality = exists $settings{camera}{quality} ? $settings{camera}{quality} * 1 : $quality;
 	$width = exists $settings{camera}{width} ? $settings{camera}{width} * 1 : $width;
@@ -144,6 +144,8 @@ while (1) {
 		# clean up
 		`rm -f $temp_dir/*.jpg`;
 	}
+
+	print "--\n\n";
 
 	# mmm, delicious sleep
 	sleep(30);

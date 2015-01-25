@@ -26,14 +26,15 @@ our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_comm
 # @param string directory path
 # @return string
 sub prepare_directory {
-	my $directory = @_;
-	$directory  =~ s/\/$//;
-	
-	if (!io($directory)->exists) {
-		io($directory)->mkdir;
+	my ($path) = @_;
+	$path =~ s/\/$//;
+	my $directory = io($path);
+
+	if (!$directory->exists) {
+		$directory->mkdir;
 	}
 	
-	return $directory;
+	return $path;
 }
 
 # Prepare imagemagick stack command
@@ -72,7 +73,7 @@ sub prepare_capture_command {
 # @param string path to settings file
 # @retun hash
 sub read_settings {
-	my $settings_file = @_;
+	my ($settings_file) = @_;
 	my $file = io($settings_file);
 
 	if ($file->exists) {
