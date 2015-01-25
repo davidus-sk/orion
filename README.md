@@ -24,6 +24,10 @@ From the command line run `./bin/install.pl` and be patient. The installer will 
 
 From the command line run `./bin/orion.pl` and sit back. The program will run as daemon and will automatically perform all required tasks.
 
+The program continuously captures images from sunset to sunrise and then it stacks them into one single JPEG image named `orion-YYYY-MM-DD.jpg` where *YYYY-MM-DD* is the day the image was rendered. Image stacking is a very intensive process and can take several hours to complete; the duration depends on number and size of images being stacked.
+
+If you are running the default configuration and your Pi is connected to your network, you can access your stacked images at `http://<your Pi's address>/orion-YYYY-MM-DD.jpg`.
+
 ## Support
 
 There are bound to be issues. Feel free to contact me with problems you might come across.
