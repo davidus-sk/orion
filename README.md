@@ -1,2 +1,2 @@
 # orion
-Automated timelapse image capture for Raspberry Pi and the Pi camera
+Automated timelapse image capture and stacking for Raspberry Pi and the Pi camera

@@ -1,4 +1,0 @@
-apache2
-imagemagick
-libdatetime-event-sunrise-perl
-libio-all-perl

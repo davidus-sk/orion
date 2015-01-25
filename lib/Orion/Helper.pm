@@ -1,17 +1,25 @@
 # ORION - Automated timelapse image capture and stacking for Raspberry Pi and the Pi camera
 # (c) 2015 David Ponevac (david at davidus dot sk) www.davidus.sk
 #
+# Helper library
+#
 # version 1.0 [2015-01-23]
 
 package Orion::Helper;
 
+## libraries
+
 use strict;
 use warnings;
+
 use IO::All;
+use JSON;
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command);
+our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings);
+
+## code
 
 # Clean directory name and create if does not exists
 #
@@ -57,4 +65,20 @@ sub prepare_capture_command {
 	my ($timeout, $timelapse, $iso, $exposure, $stabilization, $shutter_speed, $quality, $width, $height, $destination) = @_;
 	
 	return "raspistill -t $timeout -tl $timelapse -n -ISO $iso -ex $exposure " . ($stabilization ? "-vs" : "") . " -ss $shutter_speed -q $quality -w $width -h $height -o $destination > /dev/null 2>&1";
+}
+
+# Read configuration settings from file
+#
+# @param string path to settings file
+# @retun hash
+sub read_settings {
+	my $settings_file = @_;
+	my $file = io($settings_file);
+
+	if ($file->exists) {
+		my $json_data = $file->all;
+		return %{decode_json($json_data)};
+	}
+
+	return ();
 }
