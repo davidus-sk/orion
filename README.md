@@ -16,13 +16,13 @@ The housing is optional, but it will come in handy if you don't want to damage y
 
 ## Installation
 
-At minimum you need to know your decimal *latitude* and *longitude*. These are used to determine sunset/sunrise hours for your location. You can edit the `./data/settings.json` file by hand and insert those values under the *location* object.
+At minimum you need to know your decimal *latitude* and *longitude*. These are used to determine sunset/sunrise hours for your location. You can edit the `./data/settings.json` file by hand and insert those values under the *location* object or better yet, run the installer and follow simple steps.
 
-From the command line run `./bin/install.pl` and be patient. The installer will download all necessary libraries.
+From the command line run `sudo ./bin/install.pl` and enter your latitude, longitude and email address if you want to share your stacked images and be notified when stacking has completed. Be patient with the process. The installer will download all necessary libraries.
 
 ## How to use
 
-From the command line run `./bin/orion.pl` and sit back. The program will run as daemon and will automatically perform all required tasks.
+From the command line run `sudo ./bin/orion.pl` and sit back. The program will run as daemon and will automatically perform all required tasks.
 
 The program continuously captures images from sunset to sunrise and then it stacks them into one single JPEG image named `orion-YYYY-MM-DD.jpg` where *YYYY-MM-DD* is the day the image was rendered. Image stacking is a very intensive process and can take several hours to complete; the duration depends on number and size of images being stacked.
 

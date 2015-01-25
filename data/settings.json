@@ -1,6 +1,7 @@
 {
 	"user": {
-		"email":"me@raspberry.pi"
+		"email":null,
+		"url":"http://orion.davidus.sk/process.php"
 	},
 	"storage": {
 		"temp":"/var/www/temp",

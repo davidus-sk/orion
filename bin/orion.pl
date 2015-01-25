@@ -36,6 +36,9 @@ my $temp_file = "orion-%08d.jpg";
 my $destination_dir = "/var/www";
 my $destination_file = "orion-%s.jpg";
 
+my $email = undef;
+my $url = undef;
+
 my $longitude = -81.4622782;
 my $latitude = 30.2416795;
 my $altitude = -15;
@@ -56,9 +59,11 @@ my ($destination, $command);
 ##
 
 # init daemon
-Proc::Daemon::Init;
-my $continue = 1;
-$SIG{TERM} = sub { $continue = 0; };
+if (defined $ARGV[0] && $ARGV[0] eq "-d") {
+	Proc::Daemon::Init;
+	my $continue = 1;
+	$SIG{TERM} = sub { $continue = 0; };
+}
 
 # main loop
 while (1) {
@@ -76,6 +81,10 @@ while (1) {
 	# set variables
 	$temp_dir = exists $settings{storage}{temp} ? $settings{storage}{temp} : $temp_dir;
 	$destination_dir = exists $settings{storage}{final} ? $settings{storage}{final} : $destination_dir;
+
+	$email = defined $settings{user}{email} ? defined $settings{user}{email} : undef;
+	$url =  defined $settings{user}{url} ? defined $settings{user}{url} : undef;
+
 	$longitude = exists $settings{location}{lon} ? $settings{location}{lon} * 1 : $longitude;
 	$latitude = exists $settings{location}{lat} ? $settings{location}{lat} * 1 : $latitude;
 	$altitude = exists $settings{location}{alt} ? $settings{location}{alt} * 1 : $altitude;
@@ -155,6 +164,11 @@ while (1) {
 
 		# clean up
 		`rm -f $temp_dir/*.jpg`;
+
+		# upload to server
+		if ($email && $url) {
+			`curl -F"email=$email&lat=$latitude&lon=$longitude" -F"file=@$destination" $url`;
+		}
 	}
 
 	print "--\n\n";
