@@ -7,11 +7,18 @@
 #
 # version 1.0 [2015-01-24]
 
-# use
+## libraries
+
 use strict;
 use warnings;
 
-print "ORION installer\n\n";
+## variables
+
+my $binary;
+
+## code
+
+print "ORION installer\n\nPlease be patient. This might take few minutes.\n\n";
 
 print "Updating sources...\n\n";
 `apt-get update -y`;
@@ -72,7 +79,7 @@ if($@) {
 }
 
 #
-my $binary = `which rdate`;
+$binary = `which rdate`;
 
 if ($binary eq "") {
 	print "RDATE\n";
