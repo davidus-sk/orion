@@ -22,7 +22,7 @@ From the command line run `sudo ./bin/install.pl` and enter your latitude, longi
 
 ## How to use
 
-From the command line run `sudo ./bin/orion.pl` and sit back. The program will run as daemon and will automatically perform all required tasks.
+From the command line run `sudo ./bin/orion.pl -d` and sit back. The program will run as daemon and will automatically perform all required tasks.
 
 The program continuously captures images from sunset to sunrise and then it stacks them into one single JPEG image named `orion-YYYY-MM-DD.jpg` where *YYYY-MM-DD* is the day the image was rendered. Image stacking is a very intensive process and can take several hours to complete; the duration depends on number and size of images being stacked.
 

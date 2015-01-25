@@ -23,7 +23,7 @@ use DateTime::Event::Sunrise;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings);
+use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message);
 
 ##
 ## variables
@@ -37,7 +37,7 @@ my $destination_dir = "/var/www";
 my $destination_file = "orion-%s.jpg";
 
 my $email = undef;
-my $url = undef;
+my $url = "http://orion.davidus.sk/process.php";
 
 my $longitude = -81.4622782;
 my $latitude = 30.2416795;
@@ -53,13 +53,14 @@ my $width = 800;
 my $height = 600;
 
 my ($destination, $command);
+my $is_daemon = defined $ARGV[0] && $ARGV[0] eq "-d" ? 1 : 0;
 
 ##
 ## code
 ##
 
 # init daemon
-if (defined $ARGV[0] && $ARGV[0] eq "-d") {
+if ($is_daemon) {
 	Proc::Daemon::Init;
 	my $continue = 1;
 	$SIG{TERM} = sub { $continue = 0; };
@@ -99,18 +100,18 @@ while (1) {
 	$height = exists $settings{camera}{height} ? $settings{camera}{height} * 1 : $height;
 
 	# output some relevant info
-	print "Latitude: " . $latitude . "\n";
-	print "Longitude: " . $longitude . "\n";
-	print "Altitude: " . $altitude . "\n\n";
+	log_message("Latitude: " . $latitude . "\n", $is_daemon);
+	log_message("Longitude: " . $longitude . "\n", $is_daemon);
+	log_message("Altitude: " . $altitude . "\n\n", $is_daemon);
 
-	print "Now: " . $time_now->datetime() . "\n";
-	print "Sunset: " . $sun_set->datetime() . "\n";
-	print "Sunrise: " . $sun_rise->datetime() . "\n";
-	print "Duration: " . $duration_minutes . "m\n\n";
+	log_message("Now: " . $time_now->datetime() . "\n", $is_daemon);
+	log_message("Sunset: " . $sun_set->datetime() . "\n", $is_daemon);
+	log_message("Sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
+	log_message("Duration: " . $duration_minutes . "m\n\n", $is_daemon);
 
-	print "Imaging duration: " . $timeout . "ms\n";
-	print "Time between shots: " . $timelapse . "ms\n";
-	print "Shutter speed: " . ($shutter_speed/1000) . "ms\n";
+	log_message("Imaging duration: " . $timeout . "ms\n", $is_daemon);
+	log_message("Time between shots: " . $timelapse . "ms\n", $is_daemon);
+	log_message("Shutter speed: " . ($shutter_speed/1000) . "ms\n", $is_daemon);
 
 	# prepare directories
 	$temp_dir = prepare_directory($temp_dir);
@@ -118,7 +119,7 @@ while (1) {
 
 	# capture if after sunset and before sunrise
 	if ((DateTime->compare($time_now, $sun_rise) == -1) && (DateTime->compare($time_now, $sun_set) == 1)) {
-		print "Starting imaging at " . localtime() . "\n";
+		log_message("Starting imaging at " . localtime() . "\n", $is_daemon);
 
 		# write flag
 		`touch $imaging_flag_file`;
@@ -135,12 +136,12 @@ while (1) {
 		# remove flag
 		`rm -f $imaging_flag_file`;
 
-		print "Stopped imaging at " . localtime() . "\n";
+		log_message("Stopped imaging at " . localtime() . "\n", $is_daemon);
 	}
 
 	# process images if any
 	if (!io($temp_dir)->empty) {
-		print "Starting stacking at " . localtime() . "\n";
+		log_message("Starting stacking at " . localtime() . "\n", $is_daemon);
 
 		# write flag
 		`touch $processing_flag_file`;
@@ -158,9 +159,9 @@ while (1) {
 		# remove flag
 		`rm -f $processing_flag_file`;
 
-		print "Stopped stacking at " . localtime() . "\n";
+		log_message("Stopped stacking at " . localtime() . "\n", $is_daemon);
 
-		print "Cleaning up temp directory: " . $temp_dir . "\n";
+		log_message("Cleaning up temp directory: " . $temp_dir . "\n", $is_daemon);
 
 		# clean up
 		`rm -f $temp_dir/*.jpg`;
@@ -171,7 +172,7 @@ while (1) {
 		}
 	}
 
-	print "--\n\n";
+	log_message("--\n\n", $is_daemon);
 
 	# mmm, delicious sleep
 	sleep(30);

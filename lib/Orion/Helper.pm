@@ -7,7 +7,9 @@
 
 package Orion::Helper;
 
+##
 ## libraries
+##
 
 use strict;
 use warnings;
@@ -17,9 +19,11 @@ use JSON;
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings);
+our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message);
 
+##
 ## code
+##
 
 # Clean directory name and create if does not exists
 #
@@ -82,4 +86,17 @@ sub read_settings {
 	}
 
 	return ();
+}
+
+# Log debug message
+#
+# @param string message body
+# @param booelan is daemon running
+# @return void
+sub log_message {
+	my ($message, $is_daemon) = @_;
+
+	if (!$is_daemon) {
+		print $message;
+	}
 }
