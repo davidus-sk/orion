@@ -7,11 +7,14 @@
 #
 # version 1.0 [2015-01-23]
 
+##
 ## libraries
+##
 
 use strict;
 use warnings;
 
+use Proc::Daemon;
 use IO::All;
 use Time::Piece;
 use DateTime;
@@ -22,7 +25,9 @@ use lib "$Bin/../lib";
 
 use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings);
 
+##
 ## variables
+##
 
 my $imaging_flag_file = "/var/run/orion.imaging";
 my $processing_flag_file = "/var/run/orion.processing";
@@ -46,7 +51,14 @@ my $height = 600;
 
 my ($destination, $command);
 
+##
 ## code
+##
+
+# init daemon
+Proc::Daemon::Init;
+my $continue = 1;
+$SIG{TERM} = sub { $continue = 0; };
 
 # main loop
 while (1) {
