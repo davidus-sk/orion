@@ -61,6 +61,8 @@ my $is_daemon = defined $ARGV[0] && $ARGV[0] eq "-d" ? 1 : 0;
 
 # init daemon
 if ($is_daemon) {
+	log_message("Starting daemon at " . localtime() . "\n", $is_daemon);
+
 	Proc::Daemon::Init;
 	my $continue = 1;
 	$SIG{TERM} = sub { $continue = 0; };
@@ -136,7 +138,7 @@ while (1) {
 		# remove flag
 		`rm -f $imaging_flag_file`;
 
-		log_message("Stopped imaging at " . localtime() . "\n", $is_daemon);
+		log_message("Finished imaging at " . localtime() . "\n", $is_daemon);
 	}
 
 	# process images if any
@@ -159,7 +161,7 @@ while (1) {
 		# remove flag
 		`rm -f $processing_flag_file`;
 
-		log_message("Stopped stacking at " . localtime() . "\n", $is_daemon);
+		log_message("Finished stacking at " . localtime() . "\n", $is_daemon);
 
 		log_message("Cleaning up temp directory: " . $temp_dir . "\n", $is_daemon);
 
@@ -168,8 +170,15 @@ while (1) {
 
 		# upload to server
 		if ($email && $url) {
+			log_message("Starting image upload at " . localtime() . "\n", $is_daemon);
+
 			`curl -F"email=$email&lat=$latitude&lon=$longitude" -F"file=@$destination" $url`;
+
+			log_message("Finished upload at " . localtime() . "\n", $is_daemon);
 		}
+
+		# sync up time
+		`rdate -s ntp1.csx.cam.ac.uk`;
 	}
 
 	log_message("--\n\n", $is_daemon);

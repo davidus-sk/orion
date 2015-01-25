@@ -29,10 +29,10 @@ my ($binary, $lat, $lon, $email, $file, $contents);
 
 print "ORION installer\n================\n\n";
 
-print "First, lets determine where you are located. This is needed to calculate sunset\n";
+print "\e[33mFirst, lets determine where you are located. This is needed to calculate sunset\n";
 print "and sunrise times for your location. If you are not sure what your latitude and\n";
-print "longitude values are, please consult Google. Press CTRL-C to abort installation.\n";
-print "Latitude and longitude are entered in signed degree format, e.g. -30.12345.\n\n";
+print "longitude values are, please consult Google. Press \e[31mCTRL-C\e[33m to abort installation.\n";
+print "Latitude and longitude are entered in signed degree format, e.g. -30.12345.\e[0m\n\n";
 
 print "Please enter your latitude [e.g. 30.2416795]: ";
 while (1) {
@@ -43,7 +43,7 @@ while (1) {
 		$lat = $lat * 1;
 		last;
 	} else {
-		print "Invalid. Try again: ";
+		print "Invalid latitude. Try again: ";
 	}
 }
 
@@ -56,18 +56,29 @@ while (1) {
 		$lon = $lon * 1;
 		last;
 	} else {
-		print "Invalid. Try again: ";
+		print "Invalid longitude. Try again: ";
 	}
 }
 
-print "\nIf you want to share your stacked sky images with other ORION users and receive\n";
+print "\n\e[33mIf you want to share your stacked sky images with other ORION users and receive\n";
 print "notifications when your stacking has finished, please provide your email address.\n";
-print "If not, hit ENTER. Your email address will not be shared with anyone.\n\n";
-print "Your email address [e.g. me\@raspberry.pi]: ";
-$email = <STDIN>;
-chomp $email;
+print "If not, hit ENTER. Your email address will not be shared with anyone.\e[0m\n\n";
 
-print "\n================\n\nStarting installation. Please be patient. This might take few minutes. Internet connectivity is required.\n\n";
+print "Your email address [e.g. me\@raspberry.pi]: ";
+while (1) {
+	$email = <STDIN>;
+	chomp $email;
+
+	if (($email eq "") || ($email =~ /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i)) {
+		last;
+	} else {
+		print "Invalid email. Try again: ";
+	}
+}
+
+print "\n================\n\n";
+print "\e[33mStarting installation. Please be patient. This might take few minutes. \e[31mInternet\n";
+print "connectivity is required.\e[0m\n\n";
 
 print "Updating sources...\n\n";
 `apt-get update -y`;
@@ -155,7 +166,7 @@ if ($binary eq "") {
 }
 
 #
-print "\n================\n\nUpdating settings file.\n";
+print "\n================\n\nUpdating settings file...\n";
 
 use IO::All;
 
@@ -174,3 +185,6 @@ if ($file->exists) {
 	$file->buffer($contents);
 	$file->write;
 }
+
+print "Synchronizing time...\n";
+`rdate -s ntp1.csx.cam.ac.uk`;
