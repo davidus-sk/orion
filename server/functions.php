@@ -71,5 +71,9 @@ function processFile($filePath, $destinationDirectory) {
 		$image->writeImage($destinationDirectory . '/' . $fileName . '_thumb.jpg');
 
 		$image->clear();
+
+		return true;
 	}
+
+	return false;
 }
