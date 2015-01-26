@@ -10,9 +10,9 @@
 require('functions.php');
 
 // get uploaded params
-$email = trim($_POST['email']);
-$latitude = $_POST['lat'] * 1;
-$longitude = $_POST['lon'] * 1;
+$email = empty($_POST['email']) ? null : trim($_POST['email']);
+$latitude = empty($_POST['lat']) ? null : $_POST['lat'] * 1;
+$longitude = empty($_POST['lon']) ? null : $_POST['lon'] * 1;
 
 // validate post
 $fileValid = validateFile('image');

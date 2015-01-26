@@ -40,7 +40,7 @@ function validateData($email, $latitude, $longitude) {
  * @return mixed
  */
 function validateFile($file) {
-	if ($_FILES[$file]['error'] == UPLOAD_ERR_OK) {
+	if (!empty($_FILES[$file]) && ($_FILES[$file]['error'] == UPLOAD_ERR_OK)) {
 		$fileInfo = new finfo(FILEINFO_MIME_TYPE);
 		$mimeType = $fileInfo->file($_FILES[$file]['tmp_name']);
 
@@ -60,7 +60,7 @@ function validateFile($file) {
  * @return mixed
  */
 function processFile($filePath, $destinationDirectory) {
-	$image = Imagick($filePath);
+	$image = new Imagick($filePath);
 
 	if ($image && is_dir($destinationDirectory)) {
 		$fileName = microtime(true);
