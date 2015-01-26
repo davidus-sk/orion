@@ -16,7 +16,7 @@
  */
 function validateData($email, $latitude, $longitude) {
 	// check email, good enough :)
-	if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i', $email) {
+	if (!preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,6}$/i', $email)) {
 		return false;
 	}
 
