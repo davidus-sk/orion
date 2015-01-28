@@ -16,10 +16,12 @@ use warnings;
 
 use IO::All;
 use JSON;
+use DateTime;
+use DateTime::Event::Sunrise;
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message);
+our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times);
 
 ##
 ## code
@@ -99,4 +101,23 @@ sub log_message {
 	if (!$is_daemon) {
 		print $message;
 	}
+}
+
+# Get sunset and sunrise for location
+#
+# @param double latitude
+# @param double longitude
+# @param double altitude
+# @return double
+sub get_sun_times {
+	my ($latitude, $longitude, $altitude) = @_;
+
+	my $sun = DateTime::Event::Sunrise->new(longitude => $longitude, latitude  => $latitude, altitude => $altitude);
+	my $time_now = DateTime->now();
+	my $sun_set = $sun->sunset_datetime($time_now);
+	my $time_tomorrow = $sun_set->clone()->add_duration(DateTime::Duration->new(days => 1));
+	my $sun_rise = $sun->sunrise_datetime($time_tomorrow);
+	my $duration_minutes = $sun_rise->subtract_datetime($sun_set)->in_units("minutes");
+
+	return ($sun_set, $sun_rise, $duration_minutes);
 }

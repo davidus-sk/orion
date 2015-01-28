@@ -18,12 +18,11 @@ use Proc::Daemon;
 use IO::All;
 use Time::Piece;
 use DateTime;
-use DateTime::Event::Sunrise;
 
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message);
+use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times);
 
 ##
 ## variables
@@ -39,10 +38,6 @@ my $destination_file = "orion-%s.jpg";
 my $email = undef;
 my $url = "http://orion.davidus.sk/process.php";
 
-my $longitude = -81.4622782;
-my $latitude = 30.2416795;
-my $altitude = -15;
-
 my $timeout = 0;
 my $timelapse = 1100;
 my $iso = 400;
@@ -54,6 +49,17 @@ my $height = 600;
 
 my ($destination, $command);
 my $is_daemon = defined $ARGV[0] && $ARGV[0] eq "-d" ? 1 : 0;
+
+
+# read settings
+my %settings = read_settings("$Bin/../data/settings.json");
+
+my $longitude = defined $settings{location}{lon} ? $settings{location}{lon} * 1 : -81.4622782;
+my $latitude = defined $settings{location}{lat} ? $settings{location}{lat} * 1 : 30.2416795;
+my $altitude = defined $settings{location}{alt} ? $settings{location}{alt} * 1 : -15;
+
+# get sunset/rise data
+my ($sun_set, $sun_rise, $duration_minutes) = get_sun_times($latitude, $longitude, $altitude);
 
 ##
 ## code
@@ -70,16 +76,11 @@ if ($is_daemon) {
 
 # main loop
 while (1) {
-	# get sunrise/sunset times
-	my $sun = DateTime::Event::Sunrise->new(longitude => $longitude, latitude  => $latitude, altitude => $altitude);
+	# get current time
 	my $time_now = DateTime->now();
-	my $sun_set = $sun->sunset_datetime($time_now);
-	my $time_tomorrow = $sun_set->clone()->add_duration(DateTime::Duration->new(days => 1));
-	my $sun_rise = $sun->sunrise_datetime($time_tomorrow);
-	my $duration_minutes = $sun_rise->subtract_datetime($sun_set)->in_units("minutes");
 
-	# read settings
-	my %settings = read_settings("$Bin/../data/settings.json");
+	# continuously read settings
+	%settings = read_settings("$Bin/../data/settings.json");
 
 	# set variables
 	$temp_dir = exists $settings{storage}{temp} ? $settings{storage}{temp} : $temp_dir;
@@ -179,6 +180,9 @@ while (1) {
 
 		# sync up time
 		`rdate -s ntp1.csx.cam.ac.uk`;
+
+		# get sunset/rise data
+		($sun_set, $sun_rise, $duration_minutes) = get_sun_times($latitude, $longitude, $altitude);
 	}
 
 	log_message("--\n\n", $is_daemon);
