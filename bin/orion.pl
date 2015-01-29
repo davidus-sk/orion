@@ -22,41 +22,47 @@ use DateTime;
 use FindBin qw($Bin);
 use lib "$Bin/../lib";
 
-use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times);
+use Orion::Helper qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times is_defined);
 
 ##
 ## variables
 ##
 
+# files and directories
 my $imaging_flag_file = "/var/run/orion.imaging";
-my $processing_flag_file = "/var/run/orion.processing";
+my $processing_flag_file = "/var/run/orion.stacking";
 my $temp_dir = "/var/www/temp";
 my $temp_file = "orion-%08d.jpg";
 my $destination_dir = "/var/www";
 my $destination_file = "orion-%s.jpg";
+my $destination = undef;
+my $settings_file = "$Bin/../data/settings.json";
 
+# cloud sharing
 my $email = undef;
 my $url = "http://orion.davidus.sk/process.php";
 
+# image capture and stacking
 my $timeout = 0;
-my $timelapse = 1100;
+my $timelapse = 5000;
 my $iso = 400;
 my $exposure = "night";
 my $shutter_speed = 1000000;
 my $quality = 80;
 my $width = 800;
 my $height = 600;
+my $command = undef;
 
-my ($destination, $command);
+# daemon related
+my $continue = 1;
 my $is_daemon = defined $ARGV[0] && $ARGV[0] eq "-d" ? 1 : 0;
 
-
 # read settings
-my %settings = read_settings("$Bin/../data/settings.json");
+my %settings = read_settings($settings_file);
 
-my $longitude = defined $settings{location}{lon} ? $settings{location}{lon} * 1 : -81.4622782;
-my $latitude = defined $settings{location}{lat} ? $settings{location}{lat} * 1 : 30.2416795;
-my $altitude = defined $settings{location}{alt} ? $settings{location}{alt} * 1 : -15;
+my $longitude = is_defined($settings{location}{lon}, -81.4622782);
+my $latitude = is_defined($settings{location}{lat}, 30.2416795);
+my $altitude = is_defined($settings{location}{alt}, -15);
 
 # get sunset/rise data
 my ($sun_set, $sun_rise, $duration_minutes) = get_sun_times($latitude, $longitude, $altitude);
@@ -70,12 +76,14 @@ if ($is_daemon) {
 	log_message("Starting daemon at " . localtime() . "\n", $is_daemon);
 
 	Proc::Daemon::Init;
-	my $continue = 1;
+	$continue = 1;
 	$SIG{TERM} = sub { $continue = 0; };
 }
 
+log_message("Next sunset: " . $sun_set->datetime() . ", next sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
+
 # main loop
-while (1) {
+while ($continue) {
 	# get current time
 	my $time_now = DateTime->now();
 
@@ -101,20 +109,6 @@ while (1) {
 	$quality = exists $settings{camera}{quality} ? $settings{camera}{quality} * 1 : $quality;
 	$width = exists $settings{camera}{width} ? $settings{camera}{width} * 1 : $width;
 	$height = exists $settings{camera}{height} ? $settings{camera}{height} * 1 : $height;
-
-	# output some relevant info
-	log_message("Latitude: " . $latitude . "\n", $is_daemon);
-	log_message("Longitude: " . $longitude . "\n", $is_daemon);
-	log_message("Altitude: " . $altitude . "\n\n", $is_daemon);
-
-	log_message("Now: " . $time_now->datetime() . "\n", $is_daemon);
-	log_message("Sunset: " . $sun_set->datetime() . "\n", $is_daemon);
-	log_message("Sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
-	log_message("Duration: " . $duration_minutes . "m\n\n", $is_daemon);
-
-	log_message("Imaging duration: " . $timeout . "ms\n", $is_daemon);
-	log_message("Time between shots: " . $timelapse . "ms\n", $is_daemon);
-	log_message("Shutter speed: " . ($shutter_speed/1000) . "ms\n", $is_daemon);
 
 	# prepare directories
 	$temp_dir = prepare_directory($temp_dir);
@@ -183,9 +177,9 @@ while (1) {
 
 		# get sunset/rise data
 		($sun_set, $sun_rise, $duration_minutes) = get_sun_times($latitude, $longitude, $altitude);
-	}
 
-	log_message("--\n\n", $is_daemon);
+		log_message("Next sunset: " . $sun_set->datetime() . ", next sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
+	}
 
 	# mmm, delicious sleep
 	sleep(30);

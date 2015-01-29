@@ -18,10 +18,11 @@ use IO::All;
 use JSON;
 use DateTime;
 use DateTime::Event::Sunrise;
+use Scalar::Util qw(looks_like_number);
 
 use Exporter qw(import);
 
-our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times);
+our @EXPORT_OK = qw(prepare_directory prepare_stack_command prepare_capture_command read_settings log_message get_sun_times is_defined);
 
 ##
 ## code
@@ -100,6 +101,10 @@ sub log_message {
 
 	if (!$is_daemon) {
 		print $message;
+	} else {
+		open(MYFILE, ">>/tmp/orion.log");
+		print MYFILE $message;
+		close(MYFILE);
 	}
 }
 
@@ -120,4 +125,15 @@ sub get_sun_times {
 	my $duration_minutes = $sun_rise->subtract_datetime($sun_set)->in_units("minutes");
 
 	return ($sun_set, $sun_rise, $duration_minutes);
+}
+
+# Check if value exists, return default if not
+#
+# @param mixed value
+# @param mixed default
+# @return mixed
+sub is_defined {
+	my ($value, $default) = @_;
+
+	return defined $value ? (looks_like_number($value) ? $value * 1 : $value) : $default;
 }

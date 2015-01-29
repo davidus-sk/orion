@@ -13,7 +13,7 @@
 		"alt":-15
 	},
 	"camera": {
-		"timelapse":1100,
+		"timelapse":5000,
 		"iso":400,
 		"exposure":"night",
 		"shutter_speed":1000000,
