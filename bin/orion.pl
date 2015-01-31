@@ -164,12 +164,16 @@ while ($continue) {
 		`rm -f $temp_dir/*.jpg`;
 
 		# upload to server
-		if ($email && $url) {
-			log_message("Starting image upload at " . localtime() . "\n", $is_daemon);
+		if (io($destination)->exists) {
+			if ($email && $url) {
+				log_message("Starting image upload at " . localtime() . "\n", $is_daemon);
 
-			`curl -F email=$email -F lat=$latitude -F lon=$longitude -F image=@$destination $url`;
+				`curl -F email=$email -F lat=$latitude -F lon=$longitude -F image=@$destination $url`;
 
-			log_message("Finished upload at " . localtime() . "\n", $is_daemon);
+				log_message("Finished upload at " . localtime() . "\n", $is_daemon);
+			}
+		} else {
+			log_message("Failed to create stacked image\n", $is_daemon);
 		}
 
 		# sync up time
