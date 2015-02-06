@@ -46,14 +46,23 @@ sub prepare_directory {
 
 # Prepare imagemagick stack command
 #
-# @param string temporary directory
+# @param string temporary directory or array of file objects
 # @param string destination file
 # @param string stacking function
 # @return string
 sub prepare_stack_command {
 	my ($temp_dir, $destination, $function) = @_;
+	my $files;
+
+	if (ref($temp_dir) eq "ARRAY") {
+		foreach (@{$temp_dir}) {
+			$files .= defined $_ ? $_->name . " " : "";
+		}
+	} else {
+		$files = $temp_dir . "/*.jpg";
+	}
 	
-	return "convert $temp_dir/*.jpg -evaluate-sequence $function $destination";
+	return "convert $files -evaluate-sequence $function $destination";
 }
 
 # Prepare raspistill capture command
