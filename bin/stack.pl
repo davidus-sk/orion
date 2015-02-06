@@ -29,6 +29,7 @@ use Orion::Helper qw(prepare_directory prepare_stack_command read_settings log_m
 ##
 
 # files and directories
+my $running_flag_file = "/var/run/orion.stacking.running";
 my $stacking_flag_file = "/var/run/orion.stacking";
 my $temp_dir = "/var/www/temp";
 my $destination_dir = "/var/www";
@@ -57,14 +58,27 @@ my %settings = read_settings($settings_file);
 ## code
 ##
 
+# run only once
+my $flag = io($running_flag_file);
+
+if ($flag->exists) {
+	die("$0 already running.\n");
+} else {
+	$flag->touch;
+}
+
 # init daemon
 if ($is_daemon) {
 	log_message("Starting stacking daemon at " . localtime() . "\n", $is_daemon);
 
 	Proc::Daemon::Init;
 	$continue = 1;
-	$SIG{TERM} = sub { $continue = 0; };
+	$SIG{TERM} = sub { $continue = 0; $flag->unlink; };
+	$SIG{KILL} = sub { $continue = 0; $flag->unlink; };
 }
+
+# if ctrl-c
+$SIG{INT} = sub { $continue = 0; $flag->unlink; };
 
 # main loop
 while ($continue) {

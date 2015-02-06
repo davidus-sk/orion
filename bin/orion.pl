@@ -29,6 +29,7 @@ use Orion::Helper qw(prepare_directory prepare_capture_command read_settings log
 ##
 
 # files and directories
+my $running_flag_file = "/var/run/orion.imaging.running";
 my $imaging_flag_file = "/var/run/orion.imaging";
 my $processing_flag_file = "/var/run/orion.stacking";
 my $temp_dir = "/var/www/temp";
@@ -65,18 +66,32 @@ my ($sun_set, $sun_rise, $duration_minutes) = get_sun_times($latitude, $longitud
 ## code
 ##
 
+# run only once
+my $flag = io($running_flag_file);
+
+if ($flag->exists) {
+	die("$0 already running.\n");
+} else {
+	$flag->touch;
+}
+
 # init daemon
 if ($is_daemon) {
 	log_message("Starting imaging daemon at " . localtime() . "\n", $is_daemon);
 
 	Proc::Daemon::Init;
 	$continue = 1;
-	$SIG{TERM} = sub { $continue = 0; };
+	$SIG{TERM} = sub { $continue = 0; $flag->unlink; };
+	$SIG{KILL} = sub { $continue = 0; $flag->unlink; };
 
 	# run stacker as a daemon
 	`$Bin/stack.pl -d`;
 }
 
+# if ctrl-c
+$SIG{INT} = sub { $continue = 0; $flag->unlink; };
+
+# show info
 log_message("Next sunset: " . $sun_set->datetime() . ", next sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
 
 # main loop
