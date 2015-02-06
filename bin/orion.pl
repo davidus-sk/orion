@@ -3,9 +3,9 @@
 # ORION - Automated timelapse image capture and stacking for Raspberry Pi and the Pi camera
 # (c) 2015 David Ponevac (david at davidus dot sk) www.davidus.sk
 #
-# Main app
+# Imaging daemon
 #
-# version 1.0 [2015-01-23]
+# version 1.1 [2015-01-23]
 
 ##
 ## libraries
@@ -33,10 +33,8 @@ my $imaging_flag_file = "/var/run/orion.imaging";
 my $processing_flag_file = "/var/run/orion.stacking";
 my $temp_dir = "/var/www/temp";
 my $temp_file = "orion-%08d.jpg";
-my $destination_dir = "/var/www";
-my $destination_file = "orion-%s.jpg";
-my $destination;
 my $settings_file = "$Bin/../data/settings.json";
+my $destination;
 
 # image capture
 my $timeout = 0;
@@ -76,7 +74,7 @@ if ($is_daemon) {
 	$SIG{TERM} = sub { $continue = 0; };
 
 	# run stacker as a daemon
-	`$Bin/../bin/stack.pl -d`;
+	`$Bin/stack.pl -d`;
 }
 
 log_message("Next sunset: " . $sun_set->datetime() . ", next sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
@@ -140,7 +138,7 @@ while ($continue) {
 
 	# process images if any
 	if (!$is_daemon && !io($temp_dir)->empty) {
-		`$Bin/../bin/stack.pl`;
+		`$Bin/stack.pl`;
 	}
 
 	# mmm, delicious sleep

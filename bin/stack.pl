@@ -33,8 +33,8 @@ my $stacking_flag_file = "/var/run/orion.stacking";
 my $temp_dir = "/var/www/temp";
 my $destination_dir = "/var/www";
 my $destination_file = "orion-%s.jpg";
-my $destination;
 my $settings_file = "$Bin/../data/settings.json";
+my $destination;
 
 # cloud sharing
 my $email;
