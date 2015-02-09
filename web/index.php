@@ -58,6 +58,7 @@ if (file_exists($file)) {
 	  }
 	  
 	  i {
+		  padding-top: 5px;
 		  display: block;
 		  color: #ccc;
 	  }
@@ -105,7 +106,7 @@ if (file_exists($file)) {
 	  }
 	  
 	  .submit {
-		  border-bottom: 2px solid #ccc;
+		  border-top: 2px solid #ccc;
 		  padding-top: 20px;
 	  }
   </style>
@@ -183,14 +184,14 @@ if (file_exists($file)) {
 	  <div class="row">
 		  <label>ISO</label>
 		  <select name="camera[iso]">
-			  <option value="100" <?php echo $settings['camera']['exposure'] == '100' ? 'selected="selected"' : ''; ?>>100</option>
-			  <option value="200" <?php echo $settings['camera']['exposure'] == '200' ? 'selected="selected"' : ''; ?>>200</option>
-			  <option value="300" <?php echo $settings['camera']['exposure'] == '300' ? 'selected="selected"' : ''; ?>>300</option>
-			  <option value="400" <?php echo $settings['camera']['exposure'] == '400' ? 'selected="selected"' : ''; ?>>400</option>
-			  <option value="500" <?php echo $settings['camera']['exposure'] == '500' ? 'selected="selected"' : ''; ?>>500</option>
-			  <option value="600" <?php echo $settings['camera']['exposure'] == '600' ? 'selected="selected"' : ''; ?>>600</option>
-			  <option value="700" <?php echo $settings['camera']['exposure'] == '700' ? 'selected="selected"' : ''; ?>>700</option>
-			  <option value="800" <?php echo $settings['camera']['exposure'] == '800' ? 'selected="selected"' : ''; ?>>800</option>
+			  <option value="100" <?php echo $settings['camera']['iso'] == '100' ? 'selected="selected"' : ''; ?>>100</option>
+			  <option value="200" <?php echo $settings['camera']['iso'] == '200' ? 'selected="selected"' : ''; ?>>200</option>
+			  <option value="300" <?php echo $settings['camera']['iso'] == '300' ? 'selected="selected"' : ''; ?>>300</option>
+			  <option value="400" <?php echo $settings['camera']['iso'] == '400' ? 'selected="selected"' : ''; ?>>400</option>
+			  <option value="500" <?php echo $settings['camera']['iso'] == '500' ? 'selected="selected"' : ''; ?>>500</option>
+			  <option value="600" <?php echo $settings['camera']['iso'] == '600' ? 'selected="selected"' : ''; ?>>600</option>
+			  <option value="700" <?php echo $settings['camera']['iso'] == '700' ? 'selected="selected"' : ''; ?>>700</option>
+			  <option value="800" <?php echo $settings['camera']['iso'] == '800' ? 'selected="selected"' : ''; ?>>800</option>
 		  </select>
 		  <i>ISO sensitivity.</i>
 	  </div>
@@ -210,7 +211,6 @@ if (file_exists($file)) {
 			  <option value="antishake" <?php echo $settings['camera']['exposure'] == 'antishake' ? 'selected="selected"' : ''; ?>>antishake - Antishake mode</option>
 			  <option value="fireworks" <?php echo $settings['camera']['exposure'] == 'fireworks' ? 'selected="selected"' : ''; ?>>fireworks - Select settings</option>
 		  </select>
-		  <i>Duration between images in milliseconds.</i>
 	  </div>
 	  <div class="row">
 		  <label>Shutter speed</label>

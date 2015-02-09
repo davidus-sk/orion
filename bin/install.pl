@@ -153,7 +153,17 @@ $binary = `which apache2`;
 if ($binary eq "") {
 	print "APACHE2\n";
 	print " - Installing...\n";
-	`apt-get install -y apache2`;
+	`apt-get install -y apache2-mpm-prefork`;
+}
+
+#
+$binary = `which php5`;
+
+if ($binary eq "") {
+	print "PHP5\n";
+	print " - Installing...\n";
+	`apt-get install -y php5 libapache2-mod-php5`;
+	`a2enmod php5`;
 }
 
 #
@@ -188,3 +198,14 @@ if ($file->exists) {
 
 print "Synchronizing time...\n";
 `rdate -s ntp1.csx.cam.ac.uk`;
+
+print "Settings up configuration web tool...\n";
+$file = io("/etc/apache2/sites-available/default");
+if ($file->exists) {
+	$contents = $file->all;
+
+	if ($contents =~ /\/orion/) {
+	} else {
+		$file->append("\nAlias /orion $Bin/../web\n");
+	}
+}
