@@ -22,6 +22,15 @@ if (file_exists($file)) {
 	  label {
 		  display: block;
 		  font-weight: bold;
+		  padding-bottom: 5px;
+	  }
+
+	  input, select {
+		  display: block;
+		  padding: 5px;
+		  border-radius: 5px;
+		  border: 1px solid #ccc;
+		  width: 80%;
 	  }
 
 	  #wrapper {
@@ -29,17 +38,41 @@ if (file_exists($file)) {
 		  width: 800px;
 		  margin: 20px auto 10px auto;
 	  }
-	  
+
 	  h1 {
 		  border-bottom: 2px solid #ccc;
 	  }
-	  
+
 	  h2 {
+		  padding: 2px 5px;
+		  background: #eee;
 		  border-bottom: 1px solid #ccc;
 	  }
-	  
+
 	  .row {
 		  margin-bottom: 20px;
+	  }
+
+	  .daemon, .working {
+		  display: inline-block;
+		  padding: 2px 5px;
+		  border-radius: 5px;
+		  font-weight: bold;
+	  }
+
+	  .daemon {
+		  background: #75D6FF;
+		  color: #4985D6;
+	  }
+
+	  .working {
+		  background: #0AFE47;
+		  color: #2DC800;
+	  }
+
+	  .offline {
+		  background: #ccc;
+		  color: #aaa;
 	  }
   </style>
 
@@ -47,6 +80,16 @@ if (file_exists($file)) {
 <body>
   <form id="wrapper" action="" method="post">
 	  <h1>Orion</h1>
+	  <div class="row">
+		  <label>Imaging daemon</label>
+		  <?php if (file_exists('/var/run/orion.imaging.running')) { echo '<span class="daemon">Running</span>'; } else { echo '<span class="daemon offline">Offline</span>'; } ?>
+		  <?php if (file_exists('/var/run/orion.imaging')) { echo '<span class="working">Imaging</span>'; } else if (file_exists('/var/run/orion.imaging.running')) { echo '<span class="working offline">Sleeping</span>'; } ?>
+	  </div>
+	  <div class="row">
+		  <label>Stacking daemon</label>
+		  <?php if (file_exists('/var/run/orion.stacking.running')) { echo '<span class="daemon">Running</span>'; } else { echo '<span class="daemon offline">Offline</span>'; } ?>
+		  <?php if (file_exists('/var/run/orion.stacking')) { echo '<span class="working">Stacking</span>'; } else if (file_exists('/var/run/orion.stacking.running')) { echo '<span class="working offline">Sleeping</span>'; } ?>
+	  </div>
 
 	  <h2>User</h2>
 	  <div class="row">
