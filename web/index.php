@@ -52,7 +52,7 @@ if (file_exists($file)) {
 <body>
 	<div class="wrapper">
 		<form id="form" action="" method="post">
-			<h1>Orion</h1>
+			<h1>Orion - Raspberry Pi and Pi camera powered automated image stacker</h1>
 			<div class="row">
 				<label>Imaging daemon</label>
 				<?php if (file_exists('/var/run/orion.imaging.running')) { echo '<span class="daemon">Running</span>'; } else { echo '<span class="daemon offline">Offline</span>'; } ?>
