@@ -157,7 +157,7 @@ while ($continue) {
 					if ($email && $url) {
 						log_message("Starting image upload at " . localtime() . "\n", $is_daemon);
 
-						`curl -F email=$email -F lat=$latitude -F lon=$longitude -F image=@$destination $url`;
+						`curl -F email=$email -F lat=$latitude -F lon=$longitude -F image=\@$destination $url`;
 
 						log_message("Finished upload at " . localtime() . "\n", $is_daemon);
 					}
