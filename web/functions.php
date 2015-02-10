@@ -16,9 +16,11 @@
  */
 function selectBox($name, $options, $selected) {
 	$html = '<select name="' . $name . '">';
-	foreach ($option as $key=>$value) {
+
+	foreach ($options as $key=>$value) {
 		$html .= '<option value="' . $key . '" '. ($selected == $key ? 'selected="selected"' : '') . '>' . $value . '</option>';
 	}
+
 	$html .= '</select>';
 	
 	return $html;

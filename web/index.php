@@ -68,36 +68,36 @@ if (file_exists($file)) {
 			<div class="row">
 				<label>Email</label>
 				<input type="email" name="user[email]" value="<?php echo $settings['user']['email']; ?>" placeholder="raspberry@pi.com" />
-				<i>What email address to use for stacking image sharing (not stored on server).</i>
+				<p><i>What email address to use for stacking image sharing (not stored on server).</i></p>
 			</div>
 			<div class="row">
 				<label>URL</label>
 				<input type="url" name="user[url]" value="<?php echo $settings['user']['url']; ?>" placeholder="http://orion.davidus.sk/process.php" />
-				<i>Where to upload stacked image after processing.</i>
+				<p><i>Where to upload stacked image after processing.</i></p>
 			</div>
 
 			<h2>Storage</h2>
 			<div class="row">
 				<label>Temporary</label>
 				<input type="text" name="storage[temp]" value="<?php echo $settings['storage']['temp']; ?>" placeholder="/tmp" />
-				<i>Temporary directory holding all timelapse photos.</i>
+				<p><i>Temporary directory holding all timelapse photos.</i></p>
 			</div>
 			<div class="row">
 				<label>Final</label>
 				<input type="text" name="storage[final]" value="<?php echo $settings['storage']['final']; ?>" placeholder="/home/user/photos" />
-				<i>Final resting place for the stacked image.</i>
+				<p><i>Final resting place for the stacked image.</i></p>
 			</div>
 
 			<h2>Location</h2>
 			<div class="row">
 				<label>Latitude</label>
 				<input type="text" name="location[lat]" value="<?php echo $settings['location']['lat']; ?>" placeholder="30.2416795" />
-				<i>Your latitude in decimal format.</i>
+				<p><i>Your latitude in decimal format.</i></p>
 			</div>
 			<div class="row">
 				<label>Longitude</label>
 				<input type="text" name="location[lon]" value="<?php echo $settings['location']['lon']; ?>" placeholder="-81.4622782" />
-				<i>Your longitude in decimal format.</i>
+				<p><i>Your longitude in decimal format.</i></p>
 			</div>
 			<div class="row">
 				<label>Altitude</label>
@@ -117,7 +117,7 @@ if (file_exists($file)) {
 			<div class="row">
 				<label>Timelapse</label>
 				<input type="number" name="camera[timelapse]" value="<?php echo $settings['camera']['timelapse']; ?>" placeholder="1000" required="required" />
-				<i>Duration between images in milliseconds.</i>
+				<p><i>Duration between images in milliseconds.</i></p>
 			</div>
 			<div class="row">
 				<label>ISO</label>
@@ -131,7 +131,7 @@ if (file_exists($file)) {
 					'700' => '700',
 					'800' => '800',
 				), $settings['camera']['iso']); ?>
-				<i>ISO sensitivity.</i>
+				<p><i>ISO sensitivity.</i></p>
 			</div>
 			<div class="row">
 				<label>Exposure</label>
@@ -153,22 +153,22 @@ if (file_exists($file)) {
 			<div class="row">
 				<label>Shutter speed</label>
 				<input type="number" name="camera[shutter_speed]" value="<?php echo $settings['camera']['shutter_speed']; ?>" placeholder="1000000" required="required" />
-				<i>Camera shutter speed in microseconds.</i>
+				<p><i>Camera shutter speed in microseconds.</i></p>
 			</div>
 			<div class="row">
 				<label>JPEG quality</label>
 				<input type="number" name="camera[quality]" value="<?php echo $settings['camera']['quality']; ?>" placeholder="80" max="100" min="0" required="required" />
-				<i>JPEG image quality (value between 0 and 100).</i>
+				<p><i>JPEG image quality (value between 0 and 100).</i></p>
 			</div>
 			<div class="row">
 				<label>Image width</label>
 				<input type="number" name="camera[width]" value="<?php echo $settings['camera']['width']; ?>" placeholder="80" required="required" />
-				<i>Image width in pixels.</i>
+				<p><i>Image width in pixels.</i></p>
 			</div>
 			<div class="row">
 				<label>Image height</label>
 				<input type="number" name="camera[height]" value="<?php echo $settings['camera']['height']; ?>" placeholder="80" required="required" />
-				<i>Image height in pixels.</i>
+				<p><i>Image height in pixels.</i></p>
 			</div>
 			<div class="row submit">
 				<input type="submit" name="submit" value="Save settings" />
