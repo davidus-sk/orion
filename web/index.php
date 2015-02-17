@@ -6,8 +6,11 @@
 #
 # version 1.0 [2015-02-07]
 
+// include functions
 require 'functions.php';
 
+
+// variable
 $settings = false;
 $file = dirname(__FILE__) . '/../data/settings.json';
 
@@ -27,19 +30,25 @@ if (isset($_POST['submit'])) {
 	$_POST['camera']['height'] = $_POST['camera']['height'] * 1;
 	unset($_POST['submit']);
 
-	// write to file
+	// write settings to file
 	file_put_contents($file, json_encode($_POST));
 }
 
+// read settings
 if (file_exists($file)) {
 	$contents = file_get_contents($file);
-	$settings = json_decode($contents, true);
+	
+	if (!empty($contents)) {
+		$settings = json_decode($contents, true);
+	}
 }
+
+$title = 'Orion - Raspberry Pi and Pi camera powered automated image stacker';
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Orion</title>
+	<title><?php echo $title; ?></title>
 
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 	<meta name="keywords" content="" />
@@ -52,7 +61,7 @@ if (file_exists($file)) {
 <body>
 	<div class="wrapper">
 		<form id="form" action="" method="post">
-			<h1>Orion - Raspberry Pi and Pi camera powered automated image stacker</h1>
+			<h1><?php echo $title; ?></h1>
 			<div class="row">
 				<label>Imaging daemon</label>
 				<?php if (file_exists('/var/run/orion.imaging.running')) { echo '<span class="daemon">Running</span>'; } else { echo '<span class="daemon offline">Offline</span>'; } ?>

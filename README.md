@@ -1,5 +1,5 @@
 # ORION
-Automated timelapse image capture and stacking for Raspberry Pi and the Pi camera
+Orion is an automated timelapse image capture and stacking for Raspberry Pi and the Pi camera. It runs on your Pi, determins the sunset/sunrise times, performs the image capture and stacking automatically and saves the result for you viewing pleasure.
 
 But wait, there's more!
 
@@ -22,7 +22,7 @@ The housing is optional, but it will come in handy if you don't want to damage y
 
 ## Installation
 
-At minimum you need to know your decimal *latitude* and *longitude*. These are used to determine sunset/sunrise hours for your location. You can edit the `./data/settings.json` file by hand and insert those values under the *location* object or better yet, run the installer and follow simple steps.
+At minimum you need to know your decimal *latitude* and *longitude*. These are used to determine sunset/sunrise hours for your location. At any time you can edit the `./data/settings.json` file by hand and insert those values under the *location* object or better yet, run the installer and follow simple steps.
 
 From the command line run `sudo ./bin/install.pl` and enter your latitude, longitude and email address if you want to share your stacked images and be notified when stacking has completed. Be patient with the process. The installer will download all necessary libraries.
 
@@ -40,4 +40,4 @@ There are two ways to configure ORION - you can edit the `./data/settings.json` 
 
 ## Support
 
-There are bound to be issues. Feel free to contact me with problems you might come across.
+There are bound to be issues. Feel free to contact me with problems you might come across or submit your own fixes and improvements.
