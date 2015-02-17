@@ -21,7 +21,7 @@ use FindBin qw($Bin);
 ## variables
 ##
 
-my ($binary, $lat, $lon, $email, $file, $contents);
+my ($binary, $lat, $lon, $email, $file, $contents, $fh);
 
 ##
 ## code
@@ -178,12 +178,14 @@ if ($binary eq "") {
 #
 print "\n================\n\nUpdating settings file...\n";
 
-use IO::All;
+$file = "$Bin/../data/settings.json";
 
-$file = io("$Bin/../data/settings.json");
+if (-f $file) {
+	open $fh, '<', $file;
+		or die "Couldn't open file: $!"; 
+	$contents = join("", <$fh>);
+	close $fh;
 
-if ($file->exists) {
-	$contents = $file->all;
 	$contents =~ s/"lon":[0-9"\.+\-]+/"lon":$lon/g;
 	$contents =~ s/"lat":[0-9"\.+\-]+/"lat":$lat/g;
 
@@ -192,20 +194,28 @@ if ($file->exists) {
 		$contents =~ s/"email":null/"email":"$email"/g;
 	}
 
-	$file->buffer($contents);
-	$file->write;
+	open $fh, '>', $file;
+		or die "Couldn't open file: $!";
+	print $fh $contents;
+	close $fh;
 }
 
 print "Synchronizing time...\n";
 `rdate -s ntp1.csx.cam.ac.uk`;
 
 print "Settings up configuration web tool...\n";
-$file = io("/etc/apache2/sites-available/default");
-if ($file->exists) {
-	$contents = $file->all;
+
+$file = "/etc/apache2/sites-available/default";
+
+if (-f $file) {
+	open $fh, '+>>' $file;
+		or die "Couldn't open file: $!"; 
+	$contents = join("", <$fh>); 
 
 	if ($contents =~ /\/orion/) {
 	} else {
-		$file->append("\nAlias /orion $Bin/../web\n");
+		print $fh "\nAlias /orion $Bin/../web\n";
 	}
+
+	close $fh;
 }
