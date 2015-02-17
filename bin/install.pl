@@ -181,8 +181,7 @@ print "\n================\n\nUpdating settings file...\n";
 $file = "$Bin/../data/settings.json";
 
 if (-f $file) {
-	open $fh, '<', $file;
-		or die "Couldn't open file: $!"; 
+	open $fh, '<', $file or die "Couldn't open file: $!"; 
 	$contents = join("", <$fh>);
 	close $fh;
 
@@ -194,8 +193,7 @@ if (-f $file) {
 		$contents =~ s/"email":null/"email":"$email"/g;
 	}
 
-	open $fh, '>', $file;
-		or die "Couldn't open file: $!";
+	open $fh, '>', $file or die "Couldn't open file: $!";
 	print $fh $contents;
 	close $fh;
 }
@@ -208,8 +206,7 @@ print "Settings up configuration web tool...\n";
 $file = "/etc/apache2/sites-available/default";
 
 if (-f $file) {
-	open $fh, '+>>' $file;
-		or die "Couldn't open file: $!"; 
+	open $fh, '+>>', $file or die "Couldn't open file: $!"; 
 	$contents = join("", <$fh>); 
 
 	if ($contents =~ /\/orion/) {
