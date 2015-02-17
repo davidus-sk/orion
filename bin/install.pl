@@ -207,10 +207,12 @@ $file = "/etc/apache2/sites-available/default";
 
 if (-f $file) {
 	open $fh, '+>>', $file or die "Couldn't open file: $!"; 
+	seek $fh, 0, 0;
 	$contents = join("", <$fh>); 
 
 	if ($contents =~ /\/orion/) {
 	} else {
+		seek $fh, 0, 2;
 		print $fh "\nAlias /orion $Bin/../web\n";
 	}
 
