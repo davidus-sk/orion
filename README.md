@@ -5,6 +5,8 @@ But wait, there's more!
 
 ORION will upload, if you choose to do so, your stacked images to a "cloud" repo at [orion.davidus.sk](http://orion.davidus.sk). The goal of this repository is to track the sky from many different locations around the planet and who knows, collaboratively we might capture a nice meteor or a UFO.
 
+![Star trails](https://raw.githubusercontent.com/davidus-sk/orion/master/web/images/trails.jpg "Star trails")
+
 ![Camera housing](https://raw.githubusercontent.com/davidus-sk/orion/master/web/images/housing.jpg "Camera housing")
 
 ## Requirements
