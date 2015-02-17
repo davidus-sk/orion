@@ -196,6 +196,8 @@ if (-f $file) {
 	open $fh, '>', $file or die "Couldn't open file: $!";
 	print $fh $contents;
 	close $fh;
+
+	chmod 0777, $file;
 }
 
 print "Synchronizing time...\n";
