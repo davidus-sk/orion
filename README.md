@@ -42,7 +42,7 @@ There are two ways to configure ORION - you can edit the `./data/settings.json` 
 
 ### Night time photography
 
-If your stacked image does not come out perfect on your first try, do not despair. Night time photography is a tricky subject and requires you to try out few things before you get the desired result. Photographing objects is complex, multivariate process but at minimum you need to understand the role of exposition time (shutter speed). The longer the exposition time (bigger shutter speed value), the longer will the camera module receive and process light. Therefore if your images come out too dark, increate the shutter speed (allow the module to receive more light). On the other hand if they come out white/washed-out (overexposed), decrease the shutter speed.
+If your stacked image does not come out perfect on your first try, do not despair. Night time photography is a tricky subject and requires you to try out few things before you get the desired result. Photographing objects is complex, multivariate process but at minimum you need to understand the role of exposition time (shutter speed). The longer the exposition time (bigger shutter speed value), the longer will the camera module receive and process light. Therefore if your images come out too dark, increase the shutter speed (allow the module to receive more light). On the other hand if they come out white/washed-out (overexposed), decrease the shutter speed.
 
 ## Support
 
