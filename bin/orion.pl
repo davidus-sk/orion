@@ -6,6 +6,7 @@
 # Imaging daemon
 #
 # version 1.1 [2015-01-23]
+# version 1.2 [2020-05-06]
 
 ##
 ## libraries
@@ -92,7 +93,7 @@ if ($is_daemon) {
 $SIG{INT} = sub { $continue = 0; $flag->unlink; };
 
 # show info
-log_message("Next sunset: " . $sun_set->datetime() . ", next sunrise: " . $sun_rise->datetime() . "\n", $is_daemon);
+log_message("Next sunset: " . $sun_set->datetime() . " " . $sun_set->time_zone()->name . ", next sunrise: " . $sun_rise->datetime() . " " . $sun_rise->time_zone()->name . "\n", $is_daemon);
 
 # main loop
 while ($continue) {

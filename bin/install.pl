@@ -6,6 +6,7 @@
 # Installer
 #
 # version 1.0 [2015-01-24]
+# version 1.1 [2020-05-06]
 
 ##
 ## libraries
@@ -80,7 +81,7 @@ print "\n================\n\n";
 print "\e[33mStarting installation. Please be patient. This might take few minutes. \e[31mInternet\n";
 print "connectivity is required.\e[0m\n\n";
 
-print "Updating sources...\n\n";
+print "\e[32mUpdating sources...\e[0m\n\n";
 `apt-get update -y`;
 
 #
@@ -89,7 +90,7 @@ eval {
 };
 
 if($@) {
-	print "Proc::Daemon\n";
+	print "\e[32mProc::Daemon\e[0m\n";
 	print " - Installing...\n";
 	`apt-get install -y libproc-daemon-perl`;
 }
@@ -139,44 +140,44 @@ if($@) {
 }
 
 #
-$binary = `which rdate`;
+$binary = `which ntpdate`;
 
 if ($binary eq "") {
-	print "RDATE\n";
+	print "ntpdate\n";
 	print " - Installing...\n";
-	`apt-get install -y rdate`;
+	`apt-get install -y ntpdate`;
 }
 
 #
 $binary = `which apache2`;
 
 if ($binary eq "") {
-	print "APACHE2\n";
+	print "\e[32mapache2\e[0m\n";
 	print " - Installing...\n";
-	`apt-get install -y apache2-mpm-prefork`;
+	`apt-get install -y apache2`;
 }
 
 #
-$binary = `which php5`;
+$binary = `which php`;
 
 if ($binary eq "") {
-	print "PHP5\n";
+	print "\e[32mPHP\e[0m\n";
 	print " - Installing...\n";
-	`apt-get install -y php5 libapache2-mod-php5`;
-	`a2enmod php5`;
+	`apt-get install -y php libapache2-mod-php`;
+	`a2enmod php`;
 }
 
 #
 $binary = `which convert`;
 
 if ($binary eq "") {
-	print "IMAGEMAGICK\n";
+	print "ImageMagick\n";
 	print " - Installing...\n";
 	`apt-get install -y imagemagick`;
 }
 
 #
-print "\n================\n\nUpdating settings file...\n";
+print "\n================\n\n\e[32mUpdating settings file...\e[0m\n";
 
 $file = "$Bin/../data/settings.json";
 
@@ -201,11 +202,11 @@ if (-f $file) {
 }
 
 print "Synchronizing time...\n";
-`rdate -s ntp1.csx.cam.ac.uk`;
+`ntpdate -s time.google.com`;
 
 print "Settings up configuration web tool...\n";
 
-$file = "/etc/apache2/sites-available/default";
+$file = "/etc/apache2/sites-available/000-default.conf";
 
 if (-f $file) {
 	open $fh, '+>>', $file or die "Couldn't open file: $!"; 
@@ -216,7 +217,11 @@ if (-f $file) {
 	} else {
 		seek $fh, 0, 2;
 		print $fh "\nAlias /orion $Bin/../web\n";
+		print $fh "<Directory $Bin/../web>\n\tRequire all granted\n</Directory>\n";
 	}
 
 	close $fh;
 }
+
+# restart apache
+`service apache2 restart`;
